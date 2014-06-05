@@ -1,0 +1,5 @@
+description = "BAP Core Types"
+requires = "zarith"
+version = "0.1"
+archive(byte) = "bap-types.cma"
+archive(native) = "bap-types.cmxa"

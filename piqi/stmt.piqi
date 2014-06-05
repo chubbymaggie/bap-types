@@ -1,0 +1,52 @@
+.include [
+  .module exp
+]
+
+.variant [
+  .name stmt
+  .option [.type move   ]
+  .option [.type jmp    ]
+  .option [.type cjmp   ]
+  .option [.type special]
+]
+
+.record [
+  .name move
+  .field [
+    .name lvar
+    .type var
+  ]
+  .field [
+    .name rexp
+    .type exp
+  ]
+]
+
+.record [
+  .name jmp
+  .field [
+    .name target
+    .type exp
+  ]
+]
+
+.record [
+  .name cjmp
+  .field [
+    .name cond
+    .type exp
+  ]
+  .field [
+    .name iftrue
+    .type exp
+  ]
+  .field [
+    .name iffalse
+    .type exp
+  ]
+]
+
+.alias [
+  .name special
+  .type string
+]

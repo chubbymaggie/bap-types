@@ -1,6 +1,6 @@
 open Var
 open Type
-open Dynint
+module BV = Bitvector
 
 type exp =
   | Load    of exp * exp * exp * typ       (** Load(arr,idx,endian,t) *)
@@ -8,7 +8,7 @@ type exp =
   | BinOp   of binop_type * exp * exp
   | UnOp    of unop_type * exp
   | Var     of var
-  | Int     of dynint
+  | Int     of BV.t
   | Cast    of cast_type * typ * exp       (** Cast to a new type. *)
   | Let     of var * exp * exp
   | Unknown of string * typ
@@ -26,9 +26,9 @@ type stmt =
   | Special of string (** Statement with semantics not expressible in BIL *)
 
 (** False constant. *)
-let exp_false = Int(lit 0 1)
+let exp_false = Int(BV.lit 0 1)
 (** True constant. *)
-let exp_true = Int(lit 1 1)
+let exp_true  = Int(BV.lit 1 1)
 
 let little_endian = exp_false
 let big_endian = exp_true

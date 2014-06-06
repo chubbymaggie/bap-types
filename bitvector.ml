@@ -1,5 +1,6 @@
 open Z
-type dynint = Arbitrary of (t * int)
+type t = Arbitrary of Z.t * int
+type bv = t
 let normalize i =
   match i with
   | Arbitrary (z, t) -> Arbitrary (z mod ~$t, t)

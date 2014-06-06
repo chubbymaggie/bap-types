@@ -2,9 +2,11 @@ open Var
 open Type
 module BV = Bitvector
 
+type endian = LittleEndian | BigEndian
+
 type exp =
-  | Load    of exp * exp * exp * typ       (** Load(arr,idx,endian,t) *)
-  | Store   of exp * exp * exp * exp * typ (** Store(arr,idx,val,endian,t) *)
+  | Load    of exp * exp * endian * typ       (** Load(arr,idx,endian,t) *)
+  | Store   of exp * exp * exp * endian * typ (** Store(arr,idx,val,endian,t) *)
   | BinOp   of binop_type * exp * exp
   | UnOp    of unop_type * exp
   | Var     of var
@@ -29,6 +31,3 @@ type stmt =
 let exp_false = Int(BV.lit 0 1)
 (** True constant. *)
 let exp_true  = Int(BV.lit 1 1)
-
-let little_endian = exp_false
-let big_endian = exp_true

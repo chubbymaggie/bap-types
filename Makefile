@@ -3,6 +3,7 @@ OCBF=-use-ocamlfind
 OCF=ocamlfind
 NAME=bap-types
 PIQI=piqi
+OCI=ocp-indent
 TARGETS=$(NAME).cma $(NAME).cmxa
 all: $(TARGETS)
 
@@ -23,11 +24,15 @@ install: $(TARGETS)
 test: all
 
 .PHONY: check
-check: check-piqi
+check: check-piqi check-ocp-indent
 
 .PHONY: check-piqi
 check-piqi: piqi/*.piqi
 	for piqifile in $^; do $(PIQI) check --strict $$piqifile; done
+
+.PHONY: check-ocp-indent
+check-ocp-indent: *.ml
+	for mlfile in $^; do $(OCI) $$mlfile | diff - $$mlfile; done
 
 .PHONY: uninstall
 uninstall:

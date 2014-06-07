@@ -37,4 +37,4 @@ type unop_type =
   | NEG (** Negate (2's complement) *)
   | NOT (** Bitwise not *)
 
-
+type addr = Bitvector.t

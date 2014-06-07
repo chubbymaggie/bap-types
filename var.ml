@@ -1,4 +1,5 @@
 type var = V of int * string * Type.typ
+type t = var
 
 let hash (V(i,_,_)) = i
 

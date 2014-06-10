@@ -28,6 +28,6 @@ type stmt =
   | Special of string (** Statement with semantics not expressible in BIL *)
 
 (** False constant. *)
-let exp_false = Int(BV.lit 0 1)
+let exp_false = Int (BV.lit 0 1)
 (** True constant. *)
-let exp_true  = Int(BV.lit 1 1)
+let exp_true  = Int (BV.lit 1 1)

@@ -40,4 +40,4 @@ uninstall:
 
 .PHONY: clean
 clean:
-	$(OCB) -clean
+	$(OCB) -classic-display -clean

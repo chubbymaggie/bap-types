@@ -16,7 +16,7 @@ let of_string = function
   | "x86" | "x86_32" | "X86_32" -> X86_32
   | "x86-64" | "X86-64" -> X86_64
   | "arm" | "ARM" -> ARM
-  | _ -> failwith "arch_of_string: Unknown arch"
+  | _ -> failwith "Arch.of_string: Unknown arch"
 
 exception Arch_exception of arch * string
 

@@ -1,2 +1,2 @@
 true: package(zarith)
-not <bap-types.cmx>: for-pack(Bap-types)
+not "bap-types.cmx": for-pack(Bap-types)

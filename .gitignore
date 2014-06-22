@@ -1,6 +1,8 @@
-_log
-_build
-*.native
 *.byte
 *.d.native
+*.native
 *.p.byte
+_build
+_log
+setup.data
+setup.log

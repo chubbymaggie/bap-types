@@ -1,5 +1,12 @@
+# OASIS_START
+# DO NOT EDIT (digest: 41ee765bf07924f3f49c91787cd52791)
+version = "0.1"
 description = "BAP Core Types"
 requires = "zarith"
-version = "0.1"
 archive(byte) = "bap-types.cma"
+archive(byte, plugin) = "bap-types.cma"
 archive(native) = "bap-types.cmxa"
+archive(native, plugin) = "bap-types.cmxs"
+exists_if = "bap-types.cma"
+# OASIS_STOP
+

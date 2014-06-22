@@ -1,27 +1,46 @@
-OCB=ocamlbuild
-OCBF=-use-ocamlfind
-OCF=ocamlfind
-NAME=bap-types
+# OASIS_START
+# DO NOT EDIT (digest: a3c674b4239234cbbe53afe090018954)
+
+SETUP = ocaml setup.ml
+
+build: setup.data
+	$(SETUP) -build $(BUILDFLAGS)
+
+doc: setup.data build
+	$(SETUP) -doc $(DOCFLAGS)
+
+test: setup.data build
+	$(SETUP) -test $(TESTFLAGS)
+
+all:
+	$(SETUP) -all $(ALLFLAGS)
+
+install: setup.data
+	$(SETUP) -install $(INSTALLFLAGS)
+
+uninstall: setup.data
+	$(SETUP) -uninstall $(UNINSTALLFLAGS)
+
+reinstall: setup.data
+	$(SETUP) -reinstall $(REINSTALLFLAGS)
+
+clean:
+	$(SETUP) -clean $(CLEANFLAGS)
+
+distclean:
+	$(SETUP) -distclean $(DISTCLEANFLAGS)
+
+setup.data:
+	$(SETUP) -configure $(CONFIGUREFLAGS)
+
+configure:
+	$(SETUP) -configure $(CONFIGUREFLAGS)
+
+.PHONY: build doc test all install uninstall reinstall clean distclean configure
+
+# OASIS_STOP
 PIQI=piqi
 OCI=ocp-indent
-TARGETS=$(NAME).cma $(NAME).cmxa
-all: $(TARGETS)
-
-.PHONY: %.cmxa
-%.cmxa:
-	$(OCB) $(OCBF) $@
-.PHONY: %.cma
-%.cma:
-	$(OCB) $(OCBF) $@
-
-INSTALL_FILES = $(patsubst %,_build/%,$(TARGETS)) META
-
-.PHONY: install
-install: $(TARGETS)
-	$(OCF) install $(NAME) $(INSTALL_FILES)
-
-.PHONY: test
-test: all
 
 .PHONY: check
 check: check-piqi check-ocp-indent
@@ -34,10 +53,6 @@ check-piqi: piqi/*.piqi
 check-ocp-indent: *.ml
 	for mlfile in $^; do $(OCI) $$mlfile | diff - $$mlfile; done
 
-.PHONY: uninstall
-uninstall:
-	$(OCF) remove $(NAME)
-
-.PHONY: clean
-clean:
-	$(OCB) -classic-display -clean
+.PHONY: auto-ocp-indent
+auto-ocp-indent: *.ml
+	for mlfile in $^; do $(OCI) -i $$mlfile; done

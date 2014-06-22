@@ -1,0 +1,13 @@
+OASISFormat: 0.4
+Name:        bap-types
+Version:     0.1
+Synopsis:    BAP Core Types
+Authors:     Matthew Maurer
+License:     BSD-3-clause
+Plugins:     META (0.4), DevFiles (0.4)
+
+Library "bap-types"
+  Path:         .
+  BuildTools:   ocamlbuild
+  Modules:      Arch, Bitvector, Type, Bil, Pp, Var
+  BuildDepends: zarith

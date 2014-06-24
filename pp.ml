@@ -19,25 +19,25 @@ let string_of_binop = function
   | MINUS   -> "-"
   | TIMES   -> "*"
   | DIVIDE  -> "/"
-  | SDIVIDE -> "$/"
+  | SDIVIDE -> "/$"
   | MOD     -> "%"
-  | SMOD    -> "$%"
-  | LSHIFT  -> "<<"
-  | RSHIFT  -> ">>"
-  | ARSHIFT -> "$>>"
-  | AND     -> "&"
-  | OR      -> "|"
-  | XOR     -> "^"
-  | EQ      -> "=="
+  | SMOD    -> "%$"
+  | LSHIFT  -> "lsl"
+  | RSHIFT  -> "lsr"
+  | ARSHIFT -> "asr"
+  | AND     -> "land"
+  | OR      -> "lor"
+  | XOR     -> "lxor"
+  | EQ      -> "="
   | NEQ     -> "<>"
   | LT      -> "<"
   | LE      -> "<="
-  | SLT     -> "$<"
-  | SLE     -> "$<="
+  | SLT     -> "<$"
+  | SLE     -> "<=$"
 
 let string_of_unop = function
   | NEG -> "-"
-  | NOT -> "~"
+  | NOT -> "lnot"
 
 let string_of_endian = function
   | Bil.LittleEndian -> "el"
@@ -49,15 +49,17 @@ let string_of_var (Var.V (id, name, typ)) =
 let rec string_of_exp = function
 
   | Bil.Load    (mem, idx, edn, typ) ->
-    string_of_exp mem ^ "[" ^ string_of_exp idx ^ ", " ^
-    string_of_endian edn ^ "]:" ^ string_of_typ typ
+    string_of_exp mem ^
+    "[" ^ string_of_exp idx ^ ", " ^ string_of_endian edn ^ "]:" ^
+    string_of_typ typ
 
   | Bil.Store   (mem, idx, exp, edn, typ) ->
-    string_of_exp mem ^ " with [" ^ string_of_exp idx ^ ", " ^
-    string_of_endian edn ^ "]:" ^ string_of_typ typ ^ " = " ^ string_of_exp exp
+    string_of_exp mem ^
+    " with [" ^ string_of_exp idx ^ ", " ^ string_of_endian edn ^ "]:" ^
+    string_of_typ typ ^ " <- " ^ string_of_exp exp
 
   | Bil.Ite     (ce, te, fe) ->
-    "if " ^ string_of_exp ce ^
+    "if "    ^ string_of_exp ce ^
     " then " ^ string_of_exp te ^
     " else " ^ string_of_exp fe
 
@@ -66,7 +68,7 @@ let rec string_of_exp = function
     "[" ^ string_of_exp exp ^ "]"
 
   | Bil.Concat  (le, re) ->
-    "concat[" ^ string_of_exp le ^ ":" ^ string_of_exp re ^ "]"
+    "(" ^ string_of_exp le ^ ") ^ (" ^ string_of_exp re ^ ")"
 
   | Bil.BinOp   (op, le, re) ->
     "(" ^ string_of_exp le ^ ") " ^
@@ -76,9 +78,11 @@ let rec string_of_exp = function
   | Bil.UnOp    (op, exp) ->
     string_of_unop op ^ "(" ^ string_of_exp exp ^ ")"
 
-  | Bil.Var     var -> string_of_var var
+  | Bil.Var     var ->
+    string_of_var var
 
-  | Bil.Int     bv -> BV.to_string bv
+  | Bil.Int     bv ->
+    BV.to_string bv
 
   | Bil.Cast    (ct, typ, exp) ->
     string_of_ct ct ^ ":" ^ string_of_typ typ ^ "[" ^ string_of_exp exp ^ "]"
@@ -88,9 +92,9 @@ let rec string_of_exp = function
     string_of_exp body
 
   | Bil.Unknown (s, typ) ->
-    "unknown{" ^ s ^ "}:" ^ string_of_typ typ
+    "unknown[" ^ s ^ "]:" ^ string_of_typ typ
 
-let string_of_bil = function
+let rec string_of_bil = function
 
   | Bil.Move    (var, exp) ->
     string_of_var var ^ " = " ^ string_of_exp exp
@@ -98,10 +102,22 @@ let string_of_bil = function
   | Bil.Jmp     exp ->
     "jmp " ^ string_of_exp exp
 
-  | Bil.CJmp    (ce, te, fe) ->
-    "cjmp {cond=" ^ string_of_exp ce ^
-    ", true=" ^ string_of_exp te ^
-    ", false=" ^ string_of_exp fe ^ "}"
-
   | Bil.Special s ->
-    "special: " ^ s
+    "special (" ^ s ^ ")"
+
+  | Bil.While   (cond, body) ->
+    "while (" ^ string_of_exp cond ^ ") {\n" ^
+    String.concat "\n" (List.map string_of_bil body) ^
+    "\n}"
+
+  | Bil.If      (cond, ts, fs) ->
+    "if (" ^ string_of_exp cond ^ ") {\n" ^
+    String.concat "\n" (List.map string_of_bil ts) ^
+    "\n}" ^
+    if fs = [] then
+      ""
+    else
+      " else {\n" ^ String.concat "\n" (List.map string_of_bil fs) ^ "\n}"
+
+  | Bil.CpuExn  n ->
+    "cpuexn (" ^ string_of_int n ^ ")"

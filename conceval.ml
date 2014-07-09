@@ -7,7 +7,7 @@ let width_of typ = match typ with
   | Type.TMem (_, _) -> raise (Abort "Operation cannot be performed on memory.")
 
 let bits_to_bytes n =
-  if n mod 8 != 0 then raise (Abort "Width should be multiple of 8.")
+  if n mod 8 <> 0 then raise (Abort "Width should be multiple of 8.")
   else n / 8
 
 module Memory = struct
@@ -20,15 +20,15 @@ module Memory = struct
     let width = Bitvector.lit (i_width) (Bitvector.width_of idx) in
     let right_bound = Bitvector.plus idx width in
     let mem =
-      if (Bitvector.compare Bitvector.bv_false idx) != 0 then
+      if Bitvector.compare Bitvector.bv_false idx <> 0 then
         let (_, _, mem) = MemoryMap.split left_bound mem in mem
       else mem in
     let mem =
-      if (Bitvector.compare Bitvector.bv_false right_bound) != 0 then
+      if Bitvector.compare Bitvector.bv_false right_bound <> 0 then
         let (mem, _, _) = MemoryMap.split right_bound mem in mem
       else mem in
     let data = MemoryMap.fold (fun key v acc -> (v::acc)) mem [] in
-    if (List.length data) = i_width then Some (
+    if List.length data = i_width then Some (
         match endianness with
         | BigEndian -> Bitvector.of_bytes data
         | LittleEndian -> Bitvector.of_bytes (List.rev data))

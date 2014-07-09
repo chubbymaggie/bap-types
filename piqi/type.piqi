@@ -74,13 +74,27 @@
   ]
 ]
 
-% This encoding is bad and should be replaced
+% character lists, used for serializing bitvectors
+% (with the Bitvector.bytes_of and of_bytes functions)
 .alias [
-  .name dynint
-  .type int64
+  .name char
+  .type int
+  .ocaml-type "Piqirun_custom.char"
 ]
 
+.list [
+  .name char-list
+  .type char
+]
+% bitvectors
+.alias [
+  .name bitvector
+  .type char-list
+  .ocaml-type "Piqirun_custom.bitvector"
+]
+
+% an address is now a bitvector
 .alias [
   .name address
-  .type dynint
+  .type bitvector
 ]

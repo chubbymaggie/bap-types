@@ -6,8 +6,15 @@
   .name stmt
   .option [.type move   ]
   .option [.type jmp    ]
-  .option [.type cjmp   ]
   .option [.type special]
+  .option [.type while-stmt]
+  .option [.type if-stmt]
+  .option [.type cpuexn]
+]
+
+.list [
+  .name stmt-list
+  .type stmt
 ]
 
 .record [
@@ -30,23 +37,43 @@
   ]
 ]
 
+.alias [
+  .name special
+  .type string
+]
+
 .record [
-  .name cjmp
+  .name while-stmt
   .field [
     .name cond
     .type exp
   ]
   .field [
-    .name iftrue
-    .type exp
-  ]
-  .field [
-    .name iffalse
-    .type exp
+    .name loop-body
+    .type stmt-list
   ]
 ]
 
-.alias [
-  .name special
-  .type string
+.record [
+  .name if-stmt
+  .field [
+    .name cond
+    .type exp
+  ]
+  .field [
+    .name true-branch
+    .type stmt-list
+  ]
+  .field [
+    .name false-branch
+    .type stmt-list
+  ]
+]
+
+.record [
+  .name cpuexn
+  .field [
+    .name errno
+    .type int
+  ]
 ]

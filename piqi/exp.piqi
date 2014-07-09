@@ -2,6 +2,12 @@
   .module type
 ]
 
+.enum [
+  .name endian
+  .option [.name little-endian]
+  .option [.name big-endian]
+]
+
 .variant [
   .name exp
   .option [.type var    ]
@@ -30,7 +36,7 @@
   ]
   .field [
     .name endian
-    .type exp
+    .type endian
   ]
   .field [
     .name typ
@@ -54,7 +60,7 @@
   ]
   .field [
     .name endian
-    .type exp
+    .type endian
   ]
   .field [
     .name typ
@@ -94,7 +100,7 @@
   .name inte
   .field [
     .name int
-    .type dynint
+    .type bitvector
   ]
 ]
 

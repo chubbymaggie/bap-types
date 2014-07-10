@@ -43,3 +43,4 @@ val signed_mod : t -> t -> t
 val extract : int -> int -> t -> t
 val decr : t -> t
 val incr : t -> t
+val to_zarith : t -> Z.t

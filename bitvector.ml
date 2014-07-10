@@ -141,3 +141,5 @@ let decr (Arbitrary (z, t)) =
 
 let incr (Arbitrary (z, t)) =
   litz Z.(z + one) t
+
+let to_zarith (Arbitrary (z, t)) = z

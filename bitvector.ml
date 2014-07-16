@@ -122,7 +122,7 @@ let cast_signed v t =
   litz (extend_sign v) t
 
 let cast_high (Arbitrary (z1, t1)) t2 =
-  litz (Z.shift_right z1 (t2 - t1)) t2
+  litz (Z.shift_right z1 (t1 - t2)) t2
 
 let cast_low = cast_unsigned
 

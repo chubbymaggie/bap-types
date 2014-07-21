@@ -46,7 +46,7 @@ OCI=ocp-indent
 check: check-piqi check-ocp-indent
 
 .PHONY: check-piqi
-check-piqi: piqi/bil/*.piqi piqi/trace/*.piqi
+check-piqi: piqi/bil/*.piqi
 	for piqifile in $^; do $(PIQI) check --strict $$piqifile; done
 
 .PHONY: check-ocp-indent

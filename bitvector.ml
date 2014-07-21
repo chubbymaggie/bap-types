@@ -30,10 +30,10 @@ let bool_of = function
     not (Z.equal Z.zero z)
 
 let rec normalize_bytes n = function
-    | [] -> if n > 0 then '\000' :: (normalize_bytes (n-1) []) else []
-    | (hd::tl) ->
-      if n > 0 then hd :: (normalize_bytes (n-1) tl)
-      else []
+  | [] -> if n > 0 then '\000' :: (normalize_bytes (n-1) []) else []
+  | (hd::tl) ->
+    if n > 0 then hd :: (normalize_bytes (n-1) tl)
+    else []
 
 let bytes_of (Arbitrary (z, t)) =
   normalize_bytes ((t + 7) / 8) (String.to_list (Z.to_bits z))

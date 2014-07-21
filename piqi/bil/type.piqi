@@ -74,23 +74,10 @@
   ]
 ]
 
-% character lists, used for serializing bitvectors
-% (with the Bitvector.bytes_of and of_bytes functions)
-.alias [
-  .name char
-  .type int
-  .ocaml-type "Piqirun_custom.char"
-]
-
-.list [
-  .name char-list
-  .type char
-]
 % bitvectors
 .alias [
   .name bitvector
-  .type char-list
-  .ocaml-type "Piqirun_custom.bitvector"
+  .type binary
 ]
 
 % an address is now a bitvector

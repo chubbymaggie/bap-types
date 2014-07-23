@@ -15,18 +15,18 @@ let tests =
 
       "Basic write and load" >:: (fun () ->
           let mem = Memory.store (Mem Memory.empty) (BV (Bitvector.lit 0 2))
-              (BV (Bitvector.lit 0xDEADBEEF 32)) Bil.LittleEndian (Type.Reg 32) in
+              (BV (Bitvector.lit64 0xDEADBEEFL 32)) Bil.LittleEndian (Type.Reg 32) in
           assert_equal
             (Memory.load mem (BV (Bitvector.lit 0 2)) Bil.LittleEndian (Type.Reg 32))
-            (Some (BV (Bitvector.lit 0xDEADBEEF 32)));
+            (Some (BV (Bitvector.lit64 0xDEADBEEFL 32)));
           assert_equal
             (Memory.load mem (BV (Bitvector.lit 0 2)) Bil.BigEndian (Type.Reg 32))
-            (Some (BV (Bitvector.lit 0xEFBEADDE 32)));
+            (Some (BV (Bitvector.lit64 0xEFBEADDEL 32)));
         );
 
       "Read low" >:: (fun () ->
           let mem = Memory.store (Mem Memory.empty) (BV (Bitvector.lit 0 2))
-              (BV (Bitvector.lit 0xDEADBEEF 32)) Bil.LittleEndian (Type.Reg 32) in
+              (BV (Bitvector.lit64 0xDEADBEEFL 32)) Bil.LittleEndian (Type.Reg 32) in
           assert_equal
             (Memory.load mem (BV (Bitvector.lit 0 2)) Bil.LittleEndian (Type.Reg 16))
             (Some (BV (Bitvector.lit 0xBEEF 16)));
@@ -37,7 +37,7 @@ let tests =
 
       "Read high" >:: (fun () ->
           let mem = Memory.store (Mem Memory.empty) (BV (Bitvector.lit 0 2))
-              (BV (Bitvector.lit 0xDEADBEEF 32)) Bil.LittleEndian (Type.Reg 32) in
+              (BV (Bitvector.lit64 0xDEADBEEFL 32)) Bil.LittleEndian (Type.Reg 32) in
           assert_equal
             (Memory.load mem (BV (Bitvector.lit 2 2)) Bil.LittleEndian (Type.Reg 16))
             (Some (BV (Bitvector.lit 0xDEAD 16)));
@@ -48,7 +48,7 @@ let tests =
 
       "Read middle" >:: (fun () ->
           let mem = Memory.store (Mem Memory.empty) (BV (Bitvector.lit 0 2))
-              (BV (Bitvector.lit 0xDEADBEEF 32)) Bil.LittleEndian (Type.Reg 32) in
+              (BV (Bitvector.lit64 0xDEADBEEFL 32)) Bil.LittleEndian (Type.Reg 32) in
           assert_equal
             (Memory.load mem (BV (Bitvector.lit 1 2)) Bil.LittleEndian (Type.Reg 16))
             (Some (BV (Bitvector.lit 0xADBE 16)));
@@ -59,7 +59,7 @@ let tests =
 
       "Read low (bigendian)" >:: (fun () ->
           let mem = Memory.store (Mem Memory.empty) (BV (Bitvector.lit 0 2))
-              (BV (Bitvector.lit 0xEFBEADDE 32)) Bil.BigEndian (Type.Reg 32) in
+              (BV (Bitvector.lit64 0xEFBEADDEL 32)) Bil.BigEndian (Type.Reg 32) in
           assert_equal
             (Memory.load mem (BV (Bitvector.lit 0 2)) Bil.LittleEndian (Type.Reg 16))
             (Some (BV (Bitvector.lit 0xBEEF 16)));
@@ -70,7 +70,7 @@ let tests =
 
       "Read high (bigendian)" >:: (fun () ->
           let mem = Memory.store (Mem Memory.empty) (BV (Bitvector.lit 0 2))
-              (BV (Bitvector.lit 0xEFBEADDE 32)) Bil.BigEndian (Type.Reg 32) in
+              (BV (Bitvector.lit64 0xEFBEADDEL 32)) Bil.BigEndian (Type.Reg 32) in
           assert_equal
             (Memory.load mem (BV (Bitvector.lit 2 2)) Bil.LittleEndian (Type.Reg 16))
             (Some (BV (Bitvector.lit 0xDEAD 16)));
@@ -81,7 +81,7 @@ let tests =
 
       "Read middle (bigendian)" >:: (fun () ->
           let mem = Memory.store (Mem Memory.empty) (BV (Bitvector.lit 0 2))
-              (BV (Bitvector.lit 0xEFBEADDE 32)) Bil.BigEndian (Type.Reg 32) in
+              (BV (Bitvector.lit64 0xEFBEADDEL 32)) Bil.BigEndian (Type.Reg 32) in
           assert_equal
             (Memory.load mem (BV (Bitvector.lit 1 2)) Bil.LittleEndian (Type.Reg 16))
             (Some (BV (Bitvector.lit 0xADBE 16)));

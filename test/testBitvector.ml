@@ -33,7 +33,7 @@ let tests =
       );
     "concat" >:: (fun () ->
         assert_equal (B.concat (B.lit 0xDEAD 16) (B.lit 0xBEEF 16))
-          (B.lit 0xDEADBEEF 32);
+          (B.lit64 0xDEADBEEFL 32);
         assert_equal (B.concat (B.lit 40 8) (B.lit 20 7)) (B.lit 5140 15);
         assert_equal (B.concat (B.lit 20 7) (B.lit 40 8)) (B.lit 5160 15);
       );

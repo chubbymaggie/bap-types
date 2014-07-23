@@ -58,9 +58,9 @@ let tests =
         assert_equal (B.lshift (B.lit 1 8) (B.lit 10 5)) (B.lit 0 8)
       );
     "cast_high" >:: (fun () ->
-assert_equal (B.cast_high (B.lit 0xDAD5 16) 4) (B.lit 0xD 4)
+        assert_equal (B.cast_high (B.lit 0xDAD5 16) 4) (B.lit 0xD 4)
       );
     "cast_low" >:: (fun () ->
-assert_equal (B.cast_low (B.lit 0xDAD5 16) 4) (B.lit 0x5 4)
+        assert_equal (B.cast_low (B.lit 0xDAD5 16) 4) (B.lit 0x5 4)
       );
   ]

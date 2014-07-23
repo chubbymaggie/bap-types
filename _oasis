@@ -7,10 +7,12 @@ License:     BSD-3-clause
 Plugins:     META (0.4), DevFiles (0.4)
 
 Library "bap-types"
-  Path:         .
-  BuildTools:   ocamlbuild
-  Modules:      Arch, Bitvector, Type, Bil, Pp, Var, Conceval
-  BuildDepends: zarith, core_kernel
+  Path:            .
+  BuildTools:      ocamlbuild
+  Modules:         Arch, Bitvector, Type, Bil, Pp, Var, Conceval, Bil_piqi
+  InternalModules: Stmt_piqi, Stmt_piqi_ext
+  BuildDepends:    zarith, piqirun.pb, piqirun.ext, piqilib, core_kernel
+  #DataFiles:    *.piqi
 
 Executable "test"
   Path:         test

@@ -161,7 +161,7 @@ let rec eval_exp state exp =
     | Load (arr, idx, endian, t) ->
       (match Memory.load (eval_exp state arr) (eval_exp state idx) endian t with
        | Some v -> v
-       | None -> Un ("Load from unitialized memory", t))
+       | None -> Un ("Load from uninitialized memory", t))
     | Store (arr, idx, v, endian, t) ->
       Memory.store (eval_exp state arr) (eval_exp state idx) (eval_exp state v)
         endian t

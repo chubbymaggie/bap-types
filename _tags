@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: bda145470153356830b4c44b19d7ab94)
+# DO NOT EDIT (digest: 60807a6406693744756c6ca0df3f6f33)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -16,6 +16,9 @@
 # Library bap-types
 "bap-types.cmxs": use_bap-types
 <*.ml{,i}>: pkg_core_kernel
+<*.ml{,i}>: pkg_piqilib
+<*.ml{,i}>: pkg_piqirun.ext
+<*.ml{,i}>: pkg_piqirun.pb
 <*.ml{,i}>: pkg_zarith
 # Executable test
 "test/test.byte": pkg_core_kernel

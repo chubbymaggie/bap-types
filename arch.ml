@@ -13,8 +13,8 @@ let to_string = function
   | ARM    -> "ARM"
 
 let of_string = function
-  | "x86" | "x86_32" | "X86_32" -> X86_32
-  | "x86-64" | "X86-64" -> X86_64
+  | "x86" | "x86_32" | "X86_32" | "x86-32" | "X86-32" -> X86_32
+  | "x86-64" | "X86-64" | "x86_64" | "X86_64" -> X86_64
   | "arm" | "ARM" -> ARM
   | _ -> failwith "Arch.of_string: Unknown arch"
 

@@ -12,7 +12,7 @@ Library "bap-types"
   Modules:         Arch, Bitvector, Type, Bil, Pp, Var, Conceval, Bil_piqi
   InternalModules: Stmt_piqi, Stmt_piqi_ext
   BuildDepends:    zarith, piqirun.pb, piqirun.ext, piqilib, core_kernel
-  #DataFiles:    *.piqi
+  DataFiles:    *.piqi
 
 Executable "test"
   Path:         test

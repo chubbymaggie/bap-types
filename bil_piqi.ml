@@ -243,5 +243,9 @@ let rec stmt_of_piqi = function
 and stmts_of_piqi l = List.map ~f:stmt_of_piqi l
 
 let to_pb p   = Stmt_piqi_ext.gen_stmt (stmt_to_piqi p) `pb
-let to_json p = Stmt_piqi_ext.gen_stmt (stmt_to_piqi p) `json
-let to_xml p  = Stmt_piqi_ext.gen_stmt (stmt_to_piqi p) `xml
+let to_json p = Stmt_piqi_ext.gen_stmt (stmt_to_piqi p) `json_pretty
+let to_xml p  = Stmt_piqi_ext.gen_stmt (stmt_to_piqi p) `xml_pretty
+
+let pb_of_stmts p = Stmt_piqi_ext.gen_stmt_list (stmts_to_piqi p) `pb
+let json_of_stmts p = Stmt_piqi_ext.gen_stmt_list (stmts_to_piqi p) `json_pretty
+let xml_of_stmts p = Stmt_piqi_ext.gen_stmt_list (stmts_to_piqi p) `xml_pretty

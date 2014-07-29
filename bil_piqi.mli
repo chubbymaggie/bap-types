@@ -6,3 +6,7 @@ val to_json : Bil.stmt -> string
 
 (** [to_xml p] converts [p] to XML format. *)
 val to_xml : Bil.stmt -> string
+
+val pb_of_stmts : Bil.stmt list -> string
+val json_of_stmts : Bil.stmt list -> string
+val xml_of_stmts : Bil.stmt list -> string

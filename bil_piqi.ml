@@ -249,3 +249,15 @@ let to_xml p  = Stmt_piqi_ext.gen_stmt (stmt_to_piqi p) `xml_pretty
 let pb_of_stmts p = Stmt_piqi_ext.gen_stmt_list (stmts_to_piqi p) `pb
 let json_of_stmts p = Stmt_piqi_ext.gen_stmt_list (stmts_to_piqi p) `json_pretty
 let xml_of_stmts p = Stmt_piqi_ext.gen_stmt_list (stmts_to_piqi p) `xml_pretty
+
+let bil_of_pb filename =
+  stmts_of_piqi (In_channel.with_file filename ~binary:true
+                  ~f:(fun ic -> Stmt_piqi_ext.parse_stmt_list (In_channel.input_all ic) `pb))
+
+let bil_of_json filename =
+  stmts_of_piqi (In_channel.with_file filename ~binary:true
+                  ~f:(fun ic -> Stmt_piqi_ext.parse_stmt_list (In_channel.input_all ic) `json))
+
+let bil_of_xml filename =
+  stmts_of_piqi (In_channel.with_file filename ~binary:true
+                  ~f:(fun ic -> Stmt_piqi_ext.parse_stmt_list (In_channel.input_all ic) `xml))

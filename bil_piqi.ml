@@ -5,8 +5,6 @@ open Bil
 open Stmt_piqi
 open Type
 
-type program = Bil.stmt list
-
 let casttype_to_piqi : Type.cast_type -> Stmt_piqi.cast_type = function
   | CAST_UNSIGNED -> `cast_unsigned
   | CAST_SIGNED -> `cast_signed
@@ -211,16 +209,16 @@ let rec stmt_to_piqi : Bil.stmt -> Stmt_piqi.stmt = function
   | Special s -> `special s
   | While (e, stmts) ->
     let e = exp_to_piqi e in
-    let stmts = prog_to_piqi stmts in
+    let stmts = stmts_to_piqi stmts in
     `while_stmt {While_stmt.cond=e; loop_body=stmts}
   | If (e, then_branch, else_branch) ->
     let e = exp_to_piqi e in
-    let then_branch = prog_to_piqi then_branch in
-    let else_branch = prog_to_piqi else_branch in
+    let then_branch = stmts_to_piqi then_branch in
+    let else_branch = stmts_to_piqi else_branch in
     `if_stmt {If_stmt.cond=e; true_branch=then_branch; false_branch=else_branch}
   | CpuExn n -> `cpuexn {Cpuexn.errno=n}
 
-and prog_to_piqi l = List.map ~f:stmt_to_piqi l
+and stmts_to_piqi l = List.map ~f:stmt_to_piqi l
 
 let rec stmt_of_piqi = function
   | `move {Move.lvar; rexp} ->
@@ -233,16 +231,16 @@ let rec stmt_of_piqi = function
   | `special s -> Special s
   | `while_stmt {While_stmt.cond; loop_body} ->
     let e = exp_of_piqi cond in
-    let b = prog_of_piqi loop_body in
+    let b = stmts_of_piqi loop_body in
     While (e, b)
   | `if_stmt {If_stmt.cond; true_branch; false_branch} ->
     let e = exp_of_piqi cond in
-    let then_branch = prog_of_piqi true_branch in
-    let else_branch = prog_of_piqi false_branch in
+    let then_branch = stmts_of_piqi true_branch in
+    let else_branch = stmts_of_piqi false_branch in
     If (e, then_branch, else_branch)
   | `cpuexn {Cpuexn.errno} -> CpuExn errno
 
-and prog_of_piqi l = List.map ~f:stmt_of_piqi l
+and stmts_of_piqi l = List.map ~f:stmt_of_piqi l
 
 let to_pb p   = Stmt_piqi_ext.gen_stmt (stmt_to_piqi p) `pb
 let to_json p = Stmt_piqi_ext.gen_stmt (stmt_to_piqi p) `json

@@ -36,5 +36,5 @@ sig
   val disasm : cpustate
     -> (addr -> char)
     -> addr
-    -> cpustate * stmt list * addr
+    -> cpustate * stmt list * addr * string option
 end

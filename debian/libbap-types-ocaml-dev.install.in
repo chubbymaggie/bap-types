@@ -1,0 +1,9 @@
+@OCamlStdlibDir@/bap-types/META
+@OCamlStdlibDir@/bap-types/*.cma
+@OCamlStdlibDir@/bap-types/*.cmi
+@OCamlStdlibDir@/bap-types/*.ml*
+@OCamlStdlibDir@/bap-types/*.a
+@OCamlStdlibDir@/bap-types/*.cmx
+@OCamlStdlibDir@/bap-types/*.cmxa
+@OCamlStdlibDir@/bap-types/*.cmxs
+usr/share/bap-types usr/share/bap-types

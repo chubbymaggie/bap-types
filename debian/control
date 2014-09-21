@@ -1,0 +1,32 @@
+Source: bap-types
+Priority: optional
+Maintainer: Matthew Maurer <maurer@matthewmaurer.org>
+Build-Depends:
+  debhelper (>= 9), 
+  pkg-config, 
+  ocaml-nox (>= 4.01),
+  camlp4,
+  ocaml-findlib (>= 1.4),
+  dh-ocaml (>= 0.9),
+  piqi,
+  libpiqirun-ocaml-dev,
+  libzarith-ocaml-dev,
+  libcore-kernel-ocaml-dev (>= 111.21.00-1.1)
+Standards-Version: 3.9.5
+Section: ocaml 
+Homepage: https://github.com/BinaryAnalysisPlatform/bap-types
+
+Package: libbap-types-ocaml-dev
+Architecture: any
+Depends:
+  ${ocaml:Depends},
+  ${shlibs:Depends},
+  ${misc:Depends}
+Provides: ${ocaml:Provides}
+Recommends: ocaml-findlib
+Description: Core types used throughout bap
+ This package provides files needed to build bap components or create new ones
+ Most importantly, it contains:
+  * An arbitrary width bitvector
+  * The BIL intermediate language
+  * Serialization and deserialization for hte same

@@ -14,6 +14,17 @@ Library "bap-types"
   BuildDepends:    zarith, piqirun.pb, piqirun.ext, core_kernel
   DataFiles:    *.piqi
 
+AlphaFeatures: ocamlbuild_more_args
+Document "bap-types"
+  Type: ocamlbuild (0.4)
+  BuildTools: ocamlbuild, ocamldoc
+
+  Title:      API documentation for bap-types
+  XOCamlbuildPath: .
+  XOCamlbuildExtraArgs:
+    "-docflags '-colorize-code -short-functors -charset utf-8'"
+  XOCamlbuildLibraries: bap-types
+
 Executable "test"
   Path:         test
   MainIs:       test.ml

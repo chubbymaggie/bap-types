@@ -1,8 +1,8 @@
 # OASIS_START
-# DO NOT EDIT (digest: 1d9ad5706ea6488a8af320b0577c952c)
+# DO NOT EDIT (digest: eafa8b5fdca35c45ba00fad0bd6732e3)
 version = "0.1"
 description = "BAP Core Types"
-requires = "zarith piqirun.pb piqirun.ext piqilib core_kernel"
+requires = "zarith piqirun.pb piqirun.ext core_kernel"
 archive(byte) = "bap-types.cma"
 archive(byte, plugin) = "bap-types.cma"
 archive(native) = "bap-types.cmxa"

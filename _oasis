@@ -11,7 +11,7 @@ Library "bap-types"
   BuildTools:      ocamlbuild
   Modules:         Arch, Bitvector, Type, Bil, Pp, Var, Conceval, Bil_piqi
   InternalModules: Stmt_piqi, Stmt_piqi_ext
-  BuildDepends:    zarith, piqirun.pb, piqirun.ext, piqilib, core_kernel
+  BuildDepends:    zarith, piqirun.pb, piqirun.ext, core_kernel
   DataFiles:    *.piqi
 
 Executable "test"

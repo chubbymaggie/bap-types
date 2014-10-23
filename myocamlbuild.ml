@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: f032383c0cc4868e65f920c28d6b7220) *)
+(* DO NOT EDIT (digest: 7f2e02c6be29cb7d9c8c40e7fff40c5f) *)
 module OASISGettext = struct
 (* # 22 "src/oasis/OASISGettext.ml" *)
 
@@ -595,7 +595,13 @@ end
 open Ocamlbuild_plugin;;
 let package_default =
   {
-     MyOCamlbuildBase.lib_ocaml = [("bap-types", [], [])];
+     MyOCamlbuildBase.lib_ocaml =
+       [
+          ("bap_types", [], []);
+          ("conceval", [], []);
+          ("serialization", [], []);
+          ("top", [], [])
+       ];
      lib_c = [];
      flags = [];
      includes = []
@@ -604,7 +610,7 @@ let package_default =
 
 let dispatch_default = MyOCamlbuildBase.dispatch_default package_default;;
 
-# 608 "myocamlbuild.ml"
+# 614 "myocamlbuild.ml"
 (* OASIS_STOP *)
 (*
 let dispatch_local e =
@@ -630,6 +636,23 @@ rule "piqic: piqi -> .ml & _ext.ml"
   ~prods:["%_piqi.ml"; "%_piqi_ext.ml"]
   ~deps:["%.piqi"]
   (fun env _ ->
-     Cmd(S (List.filter nonempty [A (expand "${piqic}"); A (expand "${piqic_flags}"); A "-I"; A ".."; A (env "%.piqi"); A"--multi-format"])));;
+     Cmd (S (List.filter nonempty [
+         A (expand "${piqic}");
+         A (expand "${piqic_flags}");
+         A "-I";
+         A "..";
+         A (env "%.piqi");
+         A"--multi-format"])));;
 
-Ocamlbuild_plugin.dispatch dispatch_default;;
+
+let dispatch = function
+  | After_rules ->
+    List.iter
+      (fun tag ->
+         pflag ["ocaml"; tag] "pa_ounit_lib"
+           (fun s -> S[A"-ppopt"; A"-pa-ounit-lib"; A"-ppopt"; A s]))
+      ["ocamldep"; "compile"; "doc"];
+  | _ -> ()
+
+let () = Ocamlbuild_plugin.dispatch (fun hook ->
+    dispatch hook; dispatch_default hook)

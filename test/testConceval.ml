@@ -1,5 +1,28 @@
+open Core_kernel.Std
 open OUnit
+open Bap_types.Std
+
 open Conceval
+
+let i0_8   = Word.of_int ~width:8 0
+let i1_8   = Word.of_int ~width:8 1
+let i3_8   = Word.of_int ~width:8 3
+let i9_8   = Word.of_int ~width:8 9
+let i101_8 = Word.of_int ~width:8 101
+
+let test_word = Word.of_int32 0xDEADBEEFl
+let zero = BV (Word.of_int32 0l)
+let one  = BV (Word.of_int32 1l)
+let two  = BV (Word.of_int32 2l)
+
+let empty = Memory.empty
+
+
+let printer = to_string
+
+let option_printer = function
+  | None -> "None"
+  | Some v -> sprintf "Some (%s)" @@ to_string v
 
 let tests =
   "Conceval" >:::
@@ -7,87 +30,102 @@ let tests =
     "Memory" >:::
     [
       "Load without write" >:: (fun () ->
-          let mem = (Mem Memory.empty) in
-          assert_equal
-            (Memory.load mem (BV (Bitvector.lit 0 8)) Bil.LittleEndian (Type.Reg 32))
+          let mem = empty in
+          assert_equal ~printer:option_printer
+            (Memory.load mem (BV i0_8) LittleEndian `r32)
             None;
         );
 
       "Basic write and load" >:: (fun () ->
-          let mem = Memory.store (Mem Memory.empty) (BV (Bitvector.lit 0 2))
-              (BV (Bitvector.lit64 0xDEADBEEFL 32)) Bil.LittleEndian (Type.Reg 32) in
-          assert_equal
-            (Memory.load mem (BV (Bitvector.lit 0 2)) Bil.LittleEndian (Type.Reg 32))
-            (Some (BV (Bitvector.lit64 0xDEADBEEFL 32)));
-          assert_equal
-            (Memory.load mem (BV (Bitvector.lit 0 2)) Bil.BigEndian (Type.Reg 32))
-            (Some (BV (Bitvector.lit64 0xEFBEADDEL 32)));
+          let mem = Memory.store
+              ~mem:empty
+              ~idx:zero
+              ~data:(BV (Addr.of_int32 0xDEADBEEFl)) LittleEndian `r32 in
+          assert_equal ~printer:option_printer
+            (Some (BV test_word))
+            (Memory.load ~mem ~idx:zero LittleEndian `r32);
+          assert_equal ~printer:option_printer
+            (Some (BV (Bitvector.of_int32 0xEFBEADDEl)))
+            (Memory.load ~mem ~idx:zero BigEndian `r32);
         );
 
       "Read low" >:: (fun () ->
-          let mem = Memory.store (Mem Memory.empty) (BV (Bitvector.lit 0 2))
-              (BV (Bitvector.lit64 0xDEADBEEFL 32)) Bil.LittleEndian (Type.Reg 32) in
-          assert_equal
-            (Memory.load mem (BV (Bitvector.lit 0 2)) Bil.LittleEndian (Type.Reg 16))
-            (Some (BV (Bitvector.lit 0xBEEF 16)));
-          assert_equal
-            (Memory.load mem (BV (Bitvector.lit 0 2)) Bil.BigEndian (Type.Reg 16))
-            (Some (BV (Bitvector.lit 0xEFBE 16)));
+          let mem = Memory.store
+              ~mem:empty
+              ~idx:zero
+              ~data:(BV test_word)
+              LittleEndian `r32 in
+
+          assert_equal ~printer:option_printer
+            (Some (BV Word.(of_int 0xBEEF ~width:16)))
+            (Memory.load ~mem ~idx:zero LittleEndian `r16);
+
+          assert_equal ~printer:option_printer
+            (Some (BV Word.(of_int 0xEFBE ~width:16)))
+            (Memory.load ~mem ~idx:zero BigEndian `r16);
         );
 
       "Read high" >:: (fun () ->
-          let mem = Memory.store (Mem Memory.empty) (BV (Bitvector.lit 0 2))
-              (BV (Bitvector.lit64 0xDEADBEEFL 32)) Bil.LittleEndian (Type.Reg 32) in
-          assert_equal
-            (Memory.load mem (BV (Bitvector.lit 2 2)) Bil.LittleEndian (Type.Reg 16))
-            (Some (BV (Bitvector.lit 0xDEAD 16)));
-          assert_equal
-            (Memory.load mem (BV (Bitvector.lit 2 2)) Bil.BigEndian (Type.Reg 16))
-            (Some (BV (Bitvector.lit 0xADDE 16)));
+          let mem = Memory.store
+              ~mem:empty ~idx:zero
+              ~data:(BV (Word.of_int32 0xdeadbeefl))
+              LittleEndian `r32 in
+          assert_equal ~printer:option_printer
+            (Some (BV (Word.of_int 0xDEAD ~width:16)))
+            (Memory.load ~mem ~idx:two LittleEndian `r16);
+          assert_equal ~printer:option_printer
+            (Some (BV (Word.of_int 0xADDE ~width:16)))
+            (Memory.load ~mem ~idx:two BigEndian `r16);
         );
 
       "Read middle" >:: (fun () ->
-          let mem = Memory.store (Mem Memory.empty) (BV (Bitvector.lit 0 2))
-              (BV (Bitvector.lit64 0xDEADBEEFL 32)) Bil.LittleEndian (Type.Reg 32) in
-          assert_equal
-            (Memory.load mem (BV (Bitvector.lit 1 2)) Bil.LittleEndian (Type.Reg 16))
-            (Some (BV (Bitvector.lit 0xADBE 16)));
-          assert_equal
-            (Memory.load mem (BV (Bitvector.lit 1 2)) Bil.BigEndian (Type.Reg 16))
-            (Some (BV (Bitvector.lit 0xBEAD 16)));
+          let mem = Memory.store
+              ~mem:empty ~idx:zero
+              ~data:(BV test_word) LittleEndian `r32 in
+          assert_equal ~printer:option_printer
+            (Some (BV (Word.of_int 0xADBE ~width:16)))
+            (Memory.load ~mem ~idx:one LittleEndian `r16);
+          assert_equal ~printer:option_printer
+            (Some (BV (Word.of_int 0xBEAD ~width:16)))
+            (Memory.load ~mem ~idx:one BigEndian `r16);
         );
 
       "Read low (bigendian)" >:: (fun () ->
-          let mem = Memory.store (Mem Memory.empty) (BV (Bitvector.lit 0 2))
-              (BV (Bitvector.lit64 0xEFBEADDEL 32)) Bil.BigEndian (Type.Reg 32) in
-          assert_equal
-            (Memory.load mem (BV (Bitvector.lit 0 2)) Bil.LittleEndian (Type.Reg 16))
-            (Some (BV (Bitvector.lit 0xBEEF 16)));
-          assert_equal
-            (Memory.load mem (BV (Bitvector.lit 0 2)) Bil.BigEndian (Type.Reg 16))
-            (Some (BV (Bitvector.lit 0xEFBE 16)));
+          let mem = Memory.store
+              ~mem:empty ~idx:zero
+              ~data:(BV (Word.of_int32 0xefbeaddel))
+              BigEndian `r32 in
+          assert_equal  ~printer:option_printer
+            (Some (BV (Word.of_int 0xBEEF ~width:16)))
+            (Memory.load ~mem ~idx:zero LittleEndian `r16);
+          assert_equal ~printer:option_printer
+            (Some (BV (Word.of_int 0xEFBE ~width:16)))
+            (Memory.load ~mem ~idx:zero BigEndian `r16);
         );
 
       "Read high (bigendian)" >:: (fun () ->
-          let mem = Memory.store (Mem Memory.empty) (BV (Bitvector.lit 0 2))
-              (BV (Bitvector.lit64 0xEFBEADDEL 32)) Bil.BigEndian (Type.Reg 32) in
-          assert_equal
-            (Memory.load mem (BV (Bitvector.lit 2 2)) Bil.LittleEndian (Type.Reg 16))
-            (Some (BV (Bitvector.lit 0xDEAD 16)));
-          assert_equal
-            (Memory.load mem (BV (Bitvector.lit 2 2)) Bil.BigEndian (Type.Reg 16))
-            (Some (BV (Bitvector.lit 0xADDE 16)));
+          let mem = Memory.store
+              ~mem:empty ~idx:zero
+              ~data:(BV (Bitvector.of_int32 0xefbeaddel))
+              BigEndian `r32 in
+          assert_equal ~printer:option_printer
+            (Some (BV (Word.of_int 0xDEAD ~width:16)))
+            (Memory.load ~mem ~idx:two LittleEndian `r16);
+          assert_equal ~printer:option_printer
+            (Memory.load ~mem ~idx:two BigEndian `r16)
+            (Some (BV (Word.of_int 0xADDE ~width:16)));
         );
 
       "Read middle (bigendian)" >:: (fun () ->
-          let mem = Memory.store (Mem Memory.empty) (BV (Bitvector.lit 0 2))
-              (BV (Bitvector.lit64 0xEFBEADDEL 32)) Bil.BigEndian (Type.Reg 32) in
+          let mem = Memory.store
+              ~mem:empty ~idx:zero
+              ~data:(BV (Word.of_int32 0xefbeaddel)) BigEndian `r32 in
+          assert_equal ~printer:option_printer
+            (Some (BV (Word.of_int 0xADBE ~width:16)))
+            (Memory.load ~mem ~idx:one LittleEndian `r16);
           assert_equal
-            (Memory.load mem (BV (Bitvector.lit 1 2)) Bil.LittleEndian (Type.Reg 16))
-            (Some (BV (Bitvector.lit 0xADBE 16)));
-          assert_equal
-            (Memory.load mem (BV (Bitvector.lit 1 2)) Bil.BigEndian (Type.Reg 16))
-            (Some (BV (Bitvector.lit 0xBEAD 16)));
+            (Some (BV (Word.of_int 0xBEAD ~width:16)))
+            (Memory.load ~mem ~idx:one BigEndian `r16);
         );
     ];
     "eval_exp" >:::
@@ -95,57 +133,64 @@ let tests =
       "BinOp" >:: (fun () ->
           let state = State.empty in
           assert_equal
-            (eval_exp state Bil.(BinOp (Type.TIMES, Int (Bitvector.lit 3 8), Int (Bitvector.lit 3 8))))
-            (BV (Bitvector.lit 9 8))
-        );
+            (eval_exp state Exp.(int i3_8 * int i3_8))
+            (BV i9_8));
       "UnOp" >:: (fun () ->
           let state = State.empty in
           assert_equal
-            (eval_exp state Bil.(UnOp (Type.NOT, Int (Bitvector.lit 3 8))))
-            (BV (Bitvector.lit (-4) 8))
-        );
+            (eval_exp state Exp.(lnot (int i3_8)))
+            (BV (Word.of_int ~width:8 (-4))));
     ];
     "eval_stmt" >:::
     [
       "Move" >:: (fun () ->
           let state = State.empty in
-          let var = Var.new_var "Garfield" (Type.Reg 8) in
-          let state, _ =
-            eval_stmt state Bil.(Move (var, (Int (Bitvector.lit 3 8)))) in
+          let var = Var.create "Garfield" reg8_t in
+          let state, _ = eval_stmt state Stmt.(move var Exp.(int i3_8)) in
           assert_equal
-            (State.peek var state)
-            (Some (BV (Bitvector.lit 3 8)))
+            (State.peek state var)
+            (Some (BV i3_8))
         );
       "While" >:: (fun () ->
-          let var = Var.new_var "Daisy" (Type.Reg 8) in
-          let state, _ = eval_stmt (State.empty)
-              Bil.(Move (var, (Int (Bitvector.lit 0 8)))) in
+          let v = Var.create "Daisy" reg8_t in
           let state, _ =
-            eval_stmt state Bil.(While (BinOp (Type.NEQ, Int (Bitvector.lit 101 8), Var var), [Move (var, (BinOp (Type.PLUS, Int (Bitvector.lit 1 8), Var var)))])) in
+            eval_stmt
+              State.empty Stmt.(move v Exp.(int i0_8)) in
+          let cond = Exp.(int i101_8 <> var v) in
+          let body = Stmt.([
+              move v Exp.(int i1_8 + var v);
+            ]) in
+          let state, _ = eval_stmt state Stmt.(While (cond, body)) in
           assert_equal
-            (State.peek var state)
-            (Some (BV (Bitvector.lit 101 8)))
+            (State.peek state v)
+            (Some (BV (Word.of_int 101 ~width:8)))
         );
       "collatz" >:: (fun () ->
           (* Starting with 17, we take 12 steps in the `3x+1` problem (OEIS). *)
-          let v_steps = Var.new_var "# of steps" (Type.Reg 64) in
-          let v_n = Var.new_var "T_n" (Type.Reg 64) in
-          let state = State.empty in
-          let state, _ =
-            eval_asm state Bil.([
-                Move (v_n, (Int (Bitvector.lit 17 64)));
-                Move (v_steps, (Int (Bitvector.lit 0 64)));
-                (While ((BinOp (Type.NEQ, Int (Bitvector.lit 1 64), Var v_n)),
-                        [If ((BinOp (Type.EQ, Int (Bitvector.lit 0 64), BinOp (Type.MOD, Var v_n, Int (Bitvector.lit 2 64)))),
-                             [Move (v_n, (BinOp (Type.DIVIDE, Var v_n, Int (Bitvector.lit 2 64))))],
-                             [Move (v_n, (BinOp (Type.PLUS, (BinOp (Type.TIMES, Var v_n, Int (Bitvector.lit 3 64))), Int (Bitvector.lit 1 64))))]);
-                         Move (v_steps, (BinOp (Type.PLUS, (Var v_steps), Int (Bitvector.lit 1 64))))
-                        ]))
-              ]) in
-          assert_equal (State.peek v_n state) None;
+          let v_steps = Var.create "nsteps" reg64_t in
+          let v_n = Var.create ~tmp:true "n" reg64_t in
+          let i17_64 = Word.of_int64 17L in
+          let zero = Word.of_int64 0L  in
+          let one  = Word.of_int64 1L  in
+          let two  = Word.of_int64 2L  in
+          let three  = Word.of_int64 3L  in
+          let prog = [
+            Stmt.(move v_n Exp.(int i17_64));
+            Stmt.(move v_steps Exp.(int zero));
+            Stmt.(While (Exp.(int one <> var v_n), [
+                If (Exp.(int zero = var v_n mod int two),
+                    [move v_n Exp.(var v_n / int two)],
+                    [move v_n Exp.(var v_n * int three + int one)]);
+                move v_steps Exp.(var v_steps + int one)
+              ]))
+          ] in
+          (* Format.(fprintf std_formatter "@.@[program@ =@ %a@.@]" *)
+          (*           Stmt.pp_stmts prog); *)
+          let state, _ = eval_stmts State.empty prog in
+          assert_equal (State.peek state v_n) None;
           assert_equal
-            (State.peek v_steps state)
-            (Some (BV (Bitvector.lit 12 64)))
+            (State.peek state v_steps)
+            (Some (BV (Bitvector.of_int 12 ~width:64)))
         );
     ];
   ]

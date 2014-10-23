@@ -39,6 +39,7 @@ configure:
 .PHONY: build doc test all install uninstall reinstall clean distclean configure
 
 # OASIS_STOP
+
 PIQI=piqi
 OCI=ocp-indent
 

@@ -1,23 +1,36 @@
 .variant [
   .name typ
-  .option [.type reg]
+  .option [.name bool]
+  .option [.type size]
   .option [.type tmem]
 ]
 
-.alias [
-  .name reg
-  .type int
+.variant [
+  .name addr-size
+  .option [.name r32]
+  .option [.name r64]
 ]
+
+.variant [
+  .name size
+  .option [.name r8]
+  .option [.name r16]
+  .option [.name r32]
+  .option [.name r64]
+  .option [.name r128]
+  .option [.name r256]
+]
+
 
 .record [
   .name tmem
   .field [
     .name index-type
-    .type typ
+    .type addr-size
   ]
   .field [
     .name element-type
-    .type typ
+    .type size
   ]
 ]
 

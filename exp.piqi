@@ -39,8 +39,8 @@
     .type endian
   ]
   .field [
-    .name typ
-    .type typ
+    .name size
+    .type size
   ]
 ]
 
@@ -63,8 +63,8 @@
     .type endian
   ]
   .field [
-    .name typ
-    .type typ
+    .name size
+    .type size
   ]
 ]
 
@@ -111,8 +111,8 @@
     .type cast-type
   ]
   .field [
-    .name new-type
-    .type typ
+    .name size
+    .type size
   ]
   .field [
     .name exp
